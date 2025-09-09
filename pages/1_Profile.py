@@ -3,7 +3,7 @@ import random
 
 st.set_page_config(page_title="Signup Flow", page_icon="🔐", layout="centered")
 
-# ---------- Custom CSS for background & centered box ----------
+# ---------- Custom CSS for dark theme ----------
 page_bg_img = """
 <style>
 [data-testid="stAppViewContainer"] {
@@ -11,7 +11,6 @@ page_bg_img = """
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -19,51 +18,109 @@ page_bg_img = """
     padding-bottom: 40px;
 }
 
+/* Main box */
 .block-container {
-    background: rgba(0, 0, 0, 0.92); /* Black with slight transparency */
+    background: rgba(0, 0, 0, 0.92);
     padding: 2.5rem 3rem;
     border-radius: 15px;
-    box-shadow: 0px 4px 25px rgba(255, 255, 255, 0.1); /* Softer white glow */
-    max-width: 600px;
+    box-shadow: 0px 4px 25px rgba(255, 255, 255, 0.15);
+    max-width: 650px;
     width: 100%;
     margin: auto;
-    color: white; /* Default text white */
+    color: white;
 }
 
+/* Headings & text */
 h1, h2, h3, h4, label, p, .stMarkdown {
     color: white !important;
     text-align: center;
 }
 
-.stTextInput label, .stNumberInput label, .stSelectbox label, .stRadio label, .stSlider label {
-    color: #ddd !important; /* Softer white for labels */
-}
-
-.stTextInput input, .stNumberInput input, .stSelectbox div, .stRadio div, .stSlider div {
+/* Inputs */
+.stTextInput input, .stNumberInput input {
     background: #1a1a1a !important;
     color: white !important;
     border-radius: 8px;
     border: 1px solid #444;
+    padding: 0.4rem;
 }
 
-button[kind="primary"] {
-    background: linear-gradient(90deg, #FF7E5F, #FD3A69);
+/* --- Selectbox --- */
+.stSelectbox div[data-baseweb="select"] {
+    background: #1a1a1a !important;
     color: white !important;
-    border-radius: 10px;
-    font-size: 16px;
-    padding: 0.6rem 1rem;
-    border: none;
-    transition: 0.3s ease-in-out;
+    border-radius: 8px !important;
+    border: 1px solid #444 !important;
+    padding: 6px 10px !important;
+}
+.stSelectbox div[data-baseweb="select"] span {
+    color: white !important;
 }
 
-button[kind="primary"]:hover {
-    background: linear-gradient(90deg, #FD3A69, #FF7E5F);
-    transform: scale(1.03);
+/* --- Radio buttons --- */
+.stRadio > div {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 12px;
+}
+.stRadio div[role="radiogroup"] > label {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 8px;
+    padding: 8px 12px;
+    margin: 6px 0;
+    color: white !important;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.stRadio div[role="radiogroup"] > label:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.02);
+}
+
+/* --- Sliders --- */
+.stSlider > div {
+    padding: 10px 0;
+}
+.stSlider [role="slider"] {
+    background: linear-gradient(90deg, #FF7E5F, #FD3A69) !important;
+    border: none !important;
+    height: 14px !important;
+}
+.stSlider [role="slider"]::before {
+    background: white !important;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #FD3A69;
+}
+.stSlider .css-14f6p7l, .stSlider label {
+    color: white !important;
+}
+
+/* --- Buttons (normal + form + nav) --- */
+button, [data-testid="stFormSubmitButton"] > button {
+    background: linear-gradient(90deg, #FF7E5F, #FD3A69) !important;
+    color: white !important;
+    border-radius: 10px !important;
+    font-size: 16px !important;
+    padding: 0.6rem 1rem !important;
+    border: none !important;
+    transition: 0.2s ease-in-out;
+}
+
+button:hover, [data-testid="stFormSubmitButton"] > button:hover {
+    background: linear-gradient(90deg, #FD3A69, #FF7E5F) !important;
+    transform: scale(1.04);
 }
 </style>
 """
-st.markdown(page_bg_img, unsafe_allow_html=True)
 
+
+
+st.markdown(page_bg_img, unsafe_allow_html=True)
 st.markdown('<div class="block-container">', unsafe_allow_html=True)
 
 # ---------- Initialize session state ----------
@@ -87,7 +144,6 @@ if st.session_state.page == "otp":
     st.title("🔐 Sign Up")
     st.subheader("Step 1: Verify Your Phone")
 
-    # Send OTP form
     with st.form(key="send_otp_form"):
         phone_in = st.text_input("📱 Enter your phone number", key="phone_input")
         send_clicked = st.form_submit_button("Send OTP")
@@ -101,7 +157,6 @@ if st.session_state.page == "otp":
                 st.session_state.verified = False
                 st.success(f"✅ OTP sent to {st.session_state.phone} (Demo OTP: {st.session_state.otp})")
 
-    # OTP verify form
     if st.session_state.otp_sent:
         st.info(f"OTP has been sent to {st.session_state.phone}.")
         with st.form(key="verify_otp_form"):
@@ -114,9 +169,9 @@ if st.session_state.page == "otp":
                 if entered == st.session_state.otp:
                     st.session_state.verified = True
                     st.success("🎉 OTP Verified Successfully!")
-                    st.session_state.page = "profile"   # ✅ Jump directly
+                    st.session_state.page = "profile"
+                    st.rerun()
                 else:
-                    st.session_state.verified = False
                     st.error("❌ Incorrect OTP. Try again or resend.")
 
             if resend_clicked:
@@ -141,6 +196,7 @@ elif st.session_state.page == "profile":
             st.session_state.profile_saved = True
             st.success("✅ Profile Saved Successfully!")
             st.session_state.page = "survey_intro"
+            st.rerun()
         else:
             st.error("⚠ Please fill all required fields.")
 
@@ -151,6 +207,7 @@ elif st.session_state.page == "survey_intro":
     if st.button("Start Survey ➡"):
         st.session_state.survey_step = 0
         st.session_state.page = "survey"
+        st.rerun()
 
 # ---------- PAGE 3B: SURVEY ----------
 elif st.session_state.page == "survey":
@@ -207,11 +264,15 @@ elif st.session_state.page == "survey":
         if prev_clicked:
             if step > 0:
                 st.session_state.survey_step = step - 1
+                st.rerun()
+
         if next_clicked:
             if step < len(questions) - 1:
                 st.session_state.survey_step = step + 1
+                st.rerun()
             else:
                 st.session_state.page = "survey_done"
+                st.rerun()
 
 # ---------- PAGE 4: SURVEY COMPLETE ----------
 elif st.session_state.page == "survey_done":
