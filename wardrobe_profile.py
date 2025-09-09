@@ -11,17 +11,14 @@ st.title("SmartWardrobe: Upload Your Wardrobe Picture")
 uploaded_file = st.file_uploader("Upload a JPG image of your wardrobe", type=["jpg", "jpeg"])
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
-<<<<<<< HEAD
-    st.image(image, caption="Uploaded Wardrobe", use_column_width=True)
-=======
     st.image(image, caption="Uploaded Wardrobe",  use_container_width =True)
->>>>>>> 9dedfee (Update client and wardrobe profile)
 
     # img to array
     img_array = np.array(image)
     # img_array = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
 
     # Resize
+    
     resized_img = cv2.resize(img_array, (200, 200))
     reshaped_img = resized_img.reshape((-1, 3))
 
